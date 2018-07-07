@@ -88,7 +88,7 @@ class block_showgrade extends block_base {
     }
 
     function get_level() {
-        return number_format($this->get_finalgrade() / $this->config->pointslevel, 0);
+        return number_format(floor($this->get_finalgrade() / $this->config->pointslevel), 0);
     }
 
     function get_formatted_level() {
@@ -104,6 +104,11 @@ class block_showgrade extends block_base {
     }
 
     function get_points_nextlevel() {
+        debugging("get_points_nextlevel():\n" .
+	    "  config->pointslevel: {$this->config->pointslevel}\n" .
+	    "  get_level(): {$this->get_level()}\n" .
+            "  get_finalgrade(): {$this->get_finalgrade()}");
+
         return number_format($this->config->pointslevel * ($this->get_level() + 1) - $this->get_finalgrade(), 0);
     }
 
