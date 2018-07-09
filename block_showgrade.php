@@ -126,7 +126,7 @@ class block_showgrade extends block_base {
     }
 
     function get_maxpoints() {
-        return $this->get_grade()->rawgrademax;
+	return $this->category->get_grade_item()->grademax;
     }
 
     function get_formatted_maxpoints() {
@@ -136,7 +136,7 @@ class block_showgrade extends block_base {
     }
 
     function get_content() {
-        global $CFG, $OUTPUT;
+        global $CFG, $OUTPUT, $COURSE, $USER;
 
         if ($this->content !== null) {
             return $this->content;
@@ -154,6 +154,10 @@ class block_showgrade extends block_base {
         if ($this->config == null) {
             return $this->content;
         }
+	// only show level if current user is enrolled as student!
+	$context = context_course::instance($COURSE->id);
+	$isStudent = current(get_user_roles($context, $USER->id))->shortname=='student'? true : false;
+	if ($isStudent) {
 
         if (property_exists($this->config, 'enablelevels')) {
             if ($this->config->enablelevels == true) {
@@ -177,6 +181,12 @@ class block_showgrade extends block_base {
             }
         }
 
+	}
+
+	else {
+		// I'm not student
+		$this->content->text="<h1>Showgrade block</h1>";
+        }
         return $this->content;
     }
 
