@@ -135,6 +135,11 @@ class block_showgrade extends block_base {
                 . ' ' . get_string('possiblepoints', 'block_showgrade');
     }
 
+    function get_max_level() {
+        return number_format(floor($this->get_maxpoints() / $this->config->pointslevel), 0);
+    }
+
+
     function get_content() {
         global $CFG, $OUTPUT, $COURSE, $USER;
 
@@ -157,37 +162,61 @@ class block_showgrade extends block_base {
 	// only show level if current user is enrolled as student!
 	$context = context_course::instance($COURSE->id);
 	$isStudent = current(get_user_roles($context, $USER->id))->shortname=='student'? true : false;
+
 	if ($isStudent) {
+	    $this->content->text = $this->content_student();
+        }
+	else {
+            $this->content->text = $this->content_admin();
+	}
+
+        return $this->content;
+    }
+
+    public function content_admin() {
+        $html = '';
+        $html .= '<h1>Showgrade block</h1>';
+        $html .= "<p>Maximum points:{$this->get_maxpoints()}</p>";
 
         if (property_exists($this->config, 'enablelevels')) {
             if ($this->config->enablelevels == true) {
-		$this->content->text .= '<img src="/blocks/showgrade/img/' . $this->get_level() . '.png" height="100" width="100" />';
-                $this->content->text .= '<h2>' . $this->get_formatted_level() . '</h2>';
-                $this->content->text .= '<p>' . $this->get_formatted_nextlevel() .'</p>';
+        	$html .= "<p>Points per level:{$this->config->pointslevel}</p>";
+                $html .= "<p>Maximum level:{$this->get_max_level()}</p>";
+
+            }
+        }
+	return $html;
+    }
+
+    public function content_student() {
+	$html = '';
+
+        if (property_exists($this->config, 'enablelevels')) {
+            if ($this->config->enablelevels == true) {
+        	$html .= '<img src="/blocks/showgrade/img/' . $this->get_level() . '.png" height="100" width="100" />';
+                $html .= '<h2>' . $this->get_formatted_level() . '</h2>';
+                $html .= '<p>' . $this->get_formatted_nextlevel() .'</p>';
             }
         }
 
-        $this->content->text .= '<h4>' . $this->get_formatted_grade() . '</h4>';
+        $html .= '<h4>' . $this->get_formatted_grade() . '</h4>';
 
         if (property_exists($this->config, 'enablemaxpoints')) {
             if ($this->config->enablemaxpoints == true) {
-                $this->content->text.= '<p>' . $this->get_formatted_maxpoints() . '</p>';
+                $html.= '<p>' . $this->get_formatted_maxpoints() . '</p>';
             }
         }
 
         if (property_exists($this->config, 'enablecompletion')) {
             if ($this->config->enablecompletion == true) {
-                $this->content->text.= '<p>' . $this->get_completed_percent() . '</p>';
+                $html .= '<p>' . $this->get_completed_percent() . '</p>';
             }
         }
 
-	}
+	return $html;
 
-	else {
-		// I'm not student
-		$this->content->text="<h1>Showgrade block</h1>";
-        }
-        return $this->content;
+
+
     }
 
     public function applicable_formats() {
