@@ -43,3 +43,4 @@ $string['completed'] = 'completed';
 $string['enablemaxpoints'] = 'Enable maximum points';
 $string['of'] = 'of';
 $string['possiblepoints'] = 'possible points';
+$string['no_category_error'] = "ERROR: This plugin can't be configured if no grade category with natural aggregation is found!";
