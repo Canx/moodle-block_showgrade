@@ -168,6 +168,7 @@ class block_showgrade extends block_base {
         }
 	else {
             $this->content->text = $this->content_admin();
+	    $this->content->footer = $this->content_footer_admin();
 	}
 
         return $this->content;
@@ -186,6 +187,13 @@ class block_showgrade extends block_base {
             }
         }
 	return $html;
+    }
+
+    public function content_footer_admin() {
+	global $COURSE;
+
+        $url = new moodle_url('/blocks/showgrade/badgelevel_view.php', array('blockid' => $this->instance->id, 'courseid' => $COURSE->id));
+        return html_writer::link($url, get_string('config_badges', 'block_showgrade'));
     }
 
     public function content_student() {
