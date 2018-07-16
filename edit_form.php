@@ -33,11 +33,11 @@ class block_showgrade_edit_form extends block_edit_form {
             $mform->addElement('advcheckbox', 'config_enablecompletion', get_string('enablecompletion', 'block_showgrade'));
             $mform->addElement('advcheckbox', 'config_enablelevels', get_string('enablelevels', 'block_showgrade'));
             
-            $points = [100=>100, 200=>200,300=>300,400=>400,500=>500,1000=>1000,2000=>2000,5000=>5000];
-            
-            $mform->addElement('select', 'config_pointslevel', get_string('pointslevelup', 'block_showgrade'), $points);
-            $mform->disabledIf('config_levels', 'config_enablelevels');
+	    $mform->addElement('text','config_pointslevel', get_string('pointslevelup', 'block_showgrade'));
+	    $mform->setDefault('config_pointslevel', '100');
             $mform->disabledIf('config_pointslevel','config_enablelevels');
+	    $mform->setType('config_pointslevel', PARAM_INT);
+
 	}
 	else {
 	    $mform->addElement('html', '<div class="showgrade-error">' . get_string('no_category_error', 'block_showgrade') . '</div>');
