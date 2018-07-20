@@ -10,10 +10,10 @@ class badgelevel_form extends moodleform {
 	// TODO: Add two selects, level and badge not currently used.
         $mform =& $this->_form;
 
-	$mform->addElement('hidden','course',$this->_customdata['courseid']);
-	$mform->setType('course', PARAM_INT);
-	$mform->addElement('hidden','block',$this->_customdata['blockid']);
-	$mform->setType('block', PARAM_INT);
+	$mform->addElement('hidden','courseid',$this->_customdata['courseid']);
+	$mform->setType('courseid', PARAM_INT);
+	$mform->addElement('hidden','blockid',$this->_customdata['blockid']);
+	$mform->setType('blockid', PARAM_INT);
 
 	$mform->addElement('select','level','Level',array(1=>'Level 1',2=>'Level 2',3=>'Level 3',4=>'Level 4'), null);
         //$mform->setDefault('course', strval($this->_customdata['courseid']));
@@ -27,8 +27,8 @@ class badgelevel_form extends moodleform {
         if ($mform->isSubmitted()) {
             $level = $mform->getElement('level')->getValue();
 	    $badge = $mform->getElement('badge')->getValue();
-	    $course = $mform->getElement('course')->getValue();
-	    $block = $mform->getElement('block')->getValue();
+	    $course = $mform->getElement('courseid')->getValue();
+	    $block = $mform->getElement('blockid')->getValue();
 	    debugging($level[0] . ":" . $badge[0] . ":" . $course . ":" . $block);
            // Do whatever checking you need
         }
