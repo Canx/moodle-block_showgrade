@@ -4,21 +4,14 @@ require_once("{$CFG->libdir}/formslib.php");
 
 class badgelevel_form extends moodleform {
 
-    public static function get_badges(int $courseid) {
-        return array(1=>'insignia1',2=>'insignia2');
-    }
-
-    public static function get_levels(int $blockid) {
-        return array(1=>'Level 1',2=>'Level 2',3=>'Level 3',4=>'Level 4');
-    }
-
     function definition() {
 	$courseid = $this->_customdata['courseid'];
 	$blockid = $this->_customdata['blockid'];
+	$freebadges = $this->_customdata['freebadges'];
+	$freelevels = $this->_customdata['freelevels'];
+	$badgelevels = $this->_customdata['badgelevels'];
 
         // TODO: show current level associations with badges. Non-editable. Only button to delete!
-	$badges = badgelevel_form::get_badges($courseid);
-	$levels = badgelevel_form::get_levels($blockid);
 
 	// TODO: Add two selects, level and badge not currently used.
         $mform =& $this->_form;
@@ -28,9 +21,9 @@ class badgelevel_form extends moodleform {
 	$mform->addElement('hidden','blockid', $blockid);
 	$mform->setType('blockid', PARAM_INT);
 
-	$mform->addElement('select','level','Level', $levels, null);
+	$mform->addElement('select','level','Level', $freelevels, null);
 	$mform->setType('level', PARAM_INT);
-	$mform->addElement('select','badge','Badge', $badges, null);
+	$mform->addElement('select','badge','Badge', $freebadges, null);
 	$this->add_action_buttons();
     }
 
