@@ -192,7 +192,7 @@ class block_showgrade extends block_base {
     public function content_footer_admin() {
 	global $COURSE;
 
-        $url = new moodle_url('/blocks/showgrade/badgelevel_view.php', array('blockid' => $this->instance->id, 'courseid' => $COURSE->id));
+        $url = new moodle_url('/blocks/showgrade/badgelevel.php', array('blockid' => $this->instance->id, 'courseid' => $COURSE->id));
         return html_writer::link($url, get_string('config_badges', 'block_showgrade'));
     }
 

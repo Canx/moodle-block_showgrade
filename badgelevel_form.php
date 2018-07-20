@@ -9,12 +9,30 @@ class badgelevel_form extends moodleform {
 	
 	// TODO: Add two selects, level and badge not currently used.
         $mform =& $this->_form;
-	$mform->addElement('select','level','Level',array(1,2,3,4,5,6,7,8,9,10), null);
+
+	$mform->addElement('hidden','course',$this->_customdata['courseid']);
+	$mform->setType('course', PARAM_INT);
+	$mform->addElement('hidden','block',$this->_customdata['blockid']);
+	$mform->setType('block', PARAM_INT);
+
+	$mform->addElement('select','level','Level',array(1=>'Level 1',2=>'Level 2',3=>'Level 3',4=>'Level 4'), null);
         //$mform->setDefault('course', strval($this->_customdata['courseid']));
 	$mform->setType('level', PARAM_INT);
-	$mform->addElement('select','badge','Badge',array('insignia1','insignia2'), null);
+	$mform->addElement('select','badge','Badge',array(1=>'insignia1',2=>'insignia2'), null);
 	$this->add_action_buttons();
     }
+
+    public function definition_after_data() {
+        $mform = $this->_form;
+        if ($mform->isSubmitted()) {
+            $level = $mform->getElement('level')->getValue();
+	    $badge = $mform->getElement('badge')->getValue();
+	    $course = $mform->getElement('course')->getValue();
+	    $block = $mform->getElement('block')->getValue();
+	    debugging($level[0] . ":" . $badge[0] . ":" . $course . ":" . $block);
+           // Do whatever checking you need
+        }
+}
 
     function validation($data, $files) {
 	// TODO: check if level-badge combination is possible. Doesn't exist yet!
