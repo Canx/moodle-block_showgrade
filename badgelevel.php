@@ -2,18 +2,7 @@
  
 require_once('../../config.php');
 require_once('./badgelevel_form.php');
-
-function get_freebadges() {
-   return array(1=>'insignia1',2=>'insignia2');
-}
-
-function get_freelevels() {
-   return array(1=>'Level 1',2=>'Level 2',3=>'Level 3',4=>'Level 4');
-}
-
-function get_badgelevels() {
-   // TODO: think how we want the association to be structured
-}
+require_once('./badgelevel_db.php');
 	
 require_login();
 
@@ -40,26 +29,30 @@ $params = array('courseid'=>$courseid,
         	'blockid'=>$blockid,
 		'freebadges'=> get_freebadges(),
 		'freelevels' => get_freelevels(),
-		'badgelevels' => get_badgelevels()
+		'badgelevels' => get_badgelevels(),
 		);
 
 $badgelevel_form = new badgelevel_form(null, $params);
 
-
-if ($badgelevel_form->is_cancelled()) {
-    // return to course page
-    redirect($course_url);
+switch ($badgelevel_form->action) {
+    case 'update': 
+	// TODO: update
+	redirect($url);
+	break;
+    case 'delete': 
+	// TODO: delete
+	redirect($url);
+	break;
+    case 'add': 
+	// TODO: add
+        redirect($url);
+	break;
+    case 'cancel': 
+        redirect($course_url);
+	break;
+    default:
+        echo $OUTPUT->header();
+        $badgelevel_form->display();
+        echo $OUTPUT->footer();
 }
 
-
-echo $OUTPUT->header();
-if ($formdata = $badgelevel_form->get_data()) {
-    // TODO: not only creating new associations, also deleting associations can be possible!
-    debugging(var_dump($formdata));
-} else {
-// this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
-// or on the first display of the form.
-    $badgelevel_form->display();
-}
-
-echo $OUTPUT->footer();
