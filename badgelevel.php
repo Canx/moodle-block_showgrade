@@ -2,7 +2,6 @@
  
 require_once('../../config.php');
 require_once('./badgelevel_form.php');
-require_once('./badgelevel_db.php');
 	
 require_login();
 

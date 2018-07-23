@@ -1,6 +1,7 @@
 <?php
 
 require_once("{$CFG->libdir}/formslib.php");
+require_once('./badgelevel_db.php');
 
 class badgelevel_form extends moodleform {
 
