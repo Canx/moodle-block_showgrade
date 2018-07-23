@@ -14,12 +14,14 @@ class badgelevel_form extends moodleform {
 	$courseid = $this->db->courseid;
 	$blockid = $this->db->blockid;
 	$freebadges = $this->db->get_freebadges();
-	$freelevels = $this->db->get_freelevels();
+	$freelevels = $this->db->get_freelevels(10);
 	$badgelevels = $this->db->get_badgelevels();
 	$this->action = empty($_GET['action']) ? "show" : $_GET['action'];
 	$this->level = empty($_GET['level']) ? null : $_GET['level'];
 
         $mform =& $this->_form;
+
+	// TODO: add link to add badges (/badges/newbadge.php?type=1)
 
         // show current level associations with badges.
 	$mform->addElement('header','currentlevels', 'Current levels');

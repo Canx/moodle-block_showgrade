@@ -10,11 +10,30 @@ class badgelevel_db {
     }
 
     function get_freebadges() {
-       return array(1=>'Insignia de platino',2=>'Insignia de madera');
+        global $DB;
+
+	$sql = "SELECT * FROM {badge} AS badge"
+		. " LEFT JOIN {" . self::$table . "} AS lb ON badge.id = lb.badge_id"
+	        . " WHERE (courseid = ? OR courseid IS NULL) AND lb.badge_id IS NULL";
+        $rs = $DB->get_records_sql($sql, array($this->courseid)); 
+
+	$badges = array();
+	foreach($rs as $record) {
+            $badges[$record->id] = $record->name;
+	}
+
+	return $badges;
     }
     
-    function get_freelevels() {
-       return array(1=>'Level 1',2=>'Level 2',3=>'Level 3',4=>'Level 4');
+    function get_freelevels($max_level) {
+       $levels = array();
+       for($level=1; $level <= $max_level; $level++) {
+           $levels[$level] = 'Level ' . $level;
+       }
+
+       // TODO: Remove existing levels!
+
+       return $levels;
     }
     
     function get_badgelevels() {
@@ -23,24 +42,21 @@ class badgelevel_db {
        $sql = "SELECT * FROM ({" . self::$table . "}" .
 	       " AS lb INNER JOIN {badge} AS badge ON lb.badge_id = badge.id)" .
 	       " WHERE lb.block_id = ?";
-       $rs = $DB->get_records_sql($sql, array($this->blockid, $this->courseid));
+       $rs = $DB->get_records_sql($sql, array($this->blockid));
     
-       debugging($rs);
        $badgelevels = array();
        foreach ($rs as $record) {
-	   $badgelevels[] = 1;
-           //$badgelevels[] = array($rs["level"] => array($rs["badge.id"] => $rs->["badge.name"]));
+	   $badgelevels[$record->level] = [ $record->badge_id => $record->name ];
        }
 
        return $badgelevels;
-       return [1 => [18 => "Insignia de bronce"],
-    	    5 => [19 => "Insignia de plata"],
-    	    10 => [20 => "Insignia de oro"]
-    	];
     }
     
     // Update level-badge association
     function update($level, $badge) {
+       global $DB;
+
+
        debugging("update: " . $level . "," . $badge); 
     }
     
@@ -53,8 +69,12 @@ class badgelevel_db {
     function add($level, $badge) {
        global $DB;
 
-       //$DB->insert_record($this->table,
-       debugging("add: " . $level . "," . $badge); 
+       $record = new StdClass();
+       $record->level = $level;
+       $record->badge_id = $badge;
+       $record->block_id = $this->blockid;
+       
+       $DB->insert_record(self::$table, $record);
     }
 
 }
