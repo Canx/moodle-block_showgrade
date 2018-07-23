@@ -4,6 +4,9 @@ require_once("{$CFG->libdir}/formslib.php");
 
 class badgelevel_form extends moodleform {
 
+    function __construct($db) {
+        parent::__construct(null, array('db' => $db));
+    }
    
     function definition() {
 	$this->db = $this->_customdata['db'];

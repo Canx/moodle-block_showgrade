@@ -25,21 +25,21 @@ $PAGE->set_url($url);
 $PAGE->set_pagelayout('standard'); 
 // $PAGE->navbar->add
 
-$badgelevel_db = new badgelevel_db($courseid, $blockid);
+$db = new badgelevel_db($courseid, $blockid);
 
-$badgelevel_form = new badgelevel_form(null, array('db' => $badgelevel_db));
+$form = new badgelevel_form($db);
 
-switch ($badgelevel_form->action) {
+switch ($form->action) {
     case 'update': 
-	$badgelevel_form->update();
+	$form->update();
 	redirect($url);
 	break;
     case 'delete': 
-	$badgelevel_form->delete();
+	$form->delete();
 	redirect($url);
 	break;
     case 'add': 
-	$badgelevel_form->add();
+	$form->add();
         redirect($url);
 	break;
     case 'cancel': 
@@ -47,6 +47,6 @@ switch ($badgelevel_form->action) {
 	break;
     default:
         echo $OUTPUT->header();
-        $badgelevel_form->display();
+        $form->display();
         echo $OUTPUT->footer();
 }
