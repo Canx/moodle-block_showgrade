@@ -2,6 +2,8 @@
 
 class badgelevel_db {
 
+    private static $table = "block_showgrade_level_badge";
+
     function __construct(int $courseid, int $blockid) {
         $this->courseid = $courseid;
 	$this->blockid = $blockid;
@@ -16,11 +18,22 @@ class badgelevel_db {
     }
     
     function get_badgelevels() {
-       // table mdl_block_showgrade_level_badge: id, block_id, badge_id, level
-       // table mdlm_badge: id, name, description
-       // table mdlm_block: id, name
+       global $DB;
+
+       $sql = "SELECT * FROM ({" . self::$table . "}" .
+	       " AS lb INNER JOIN {badge} AS badge ON lb.badge_id = badge.id)" .
+	       " WHERE lb.block_id = ?";
+       $rs = $DB->get_records_sql($sql, array($this->blockid, $this->courseid));
     
-        return [1 => [18 => "Insignia de bronce"],
+       debugging($rs);
+       $badgelevels = array();
+       foreach ($rs as $record) {
+	   $badgelevels[] = 1;
+           //$badgelevels[] = array($rs["level"] => array($rs["badge.id"] => $rs->["badge.name"]));
+       }
+
+       return $badgelevels;
+       return [1 => [18 => "Insignia de bronce"],
     	    5 => [19 => "Insignia de plata"],
     	    10 => [20 => "Insignia de oro"]
     	];
@@ -38,6 +51,9 @@ class badgelevel_db {
     
     // Add level-badge association
     function add($level, $badge) {
+       global $DB;
+
+       //$DB->insert_record($this->table,
        debugging("add: " . $level . "," . $badge); 
     }
 
