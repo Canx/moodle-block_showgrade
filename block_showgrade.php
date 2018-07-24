@@ -205,6 +205,9 @@ class block_showgrade extends block_base {
                 $html .= '<h2>' . $this->get_formatted_level() . '</h2>';
                 $html .= '<p>' . $this->get_formatted_nextlevel() .'</p>';
             }
+
+	    // TODO: check if we should issue badge!
+	    self::check_and_issue_badge($this->get_level(), $USER->id);
         }
 
         $html .= '<h4>' . $this->get_formatted_grade() . '</h4>';
@@ -247,5 +250,19 @@ class block_showgrade extends block_base {
         mtrace( "Hey, my cron script is running" );
         // do something
         return true;
+    }
+
+    private static function check_and_issue_badge($level, $user) {
+        global $DB;
+
+	// TODO: quizás es mejor añadir esto al cron para que lo haga con todos los usuarios???
+	//
+        // 1. comprobar la lista de insignias que tiene el usuario
+	//
+	// 2. comprobar la lista de insignias que se pueden asignar para el igual o menor al nivel
+	//
+	// 3. comprobar si la resta del primero con el segundo da alguna insignia.
+	//
+	// 4.otorgar insignias
     }
 }
