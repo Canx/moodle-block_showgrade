@@ -12,10 +12,9 @@ class badgelevel_db {
     function get_freebadges() {
         global $DB;
 
-	$sql = "SELECT * FROM {badge} AS badge"
-		. " LEFT JOIN {" . self::$table . "} AS lb ON badge.id = lb.badge_id"
-	        . " WHERE (courseid = ? OR courseid IS NULL) AND lb.badge_id IS NULL";
-        $rs = $DB->get_records_sql($sql, array($this->courseid)); 
+	$sql = "SELECT * FROM {badge} WHERE id NOT IN" .
+	       " (SELECT badge_id FROM {" . self::$table . "} WHERE block_id = ?)";
+        $rs = $DB->get_records_sql($sql, array($this->blockid)); 
 
 	$badges = array();
 	foreach($rs as $record) {
@@ -41,7 +40,7 @@ class badgelevel_db {
 
        $sql = "SELECT * FROM ({" . self::$table . "}" .
 	       " AS lb INNER JOIN {badge} AS badge ON lb.badge_id = badge.id)" .
-	       " WHERE lb.block_id = ?";
+	       " WHERE lb.block_id = ? ORDER BY level";
        $rs = $DB->get_records_sql($sql, array($this->blockid));
     
        $badgelevels = array();
@@ -56,13 +55,18 @@ class badgelevel_db {
     function update($level, $badge) {
        global $DB;
 
+       $sql = "UPDATE {" . self::$table . "}" .
+	      " SET badge_id = ?" .
+	      " WHERE level = ?";
 
-       debugging("update: " . $level . "," . $badge); 
+       $DB->execute($sql, array($badge, $level));	
     }
     
     // Delete level-badge association
     function delete($level) {
-       debugging("delete: " . $level);
+       global $DB;
+
+       $DB->delete_records(self::$table, array('level' => $level));
     }
     
     // Add level-badge association
@@ -74,6 +78,8 @@ class badgelevel_db {
        $record->badge_id = $badge;
        $record->block_id = $this->blockid;
        
+       // deleting previous records if exist!
+       $DB->delete_records(self::$table, array('level' => $level));
        $DB->insert_record(self::$table, $record);
     }
 

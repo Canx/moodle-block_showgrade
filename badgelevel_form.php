@@ -21,13 +21,17 @@ class badgelevel_form extends moodleform {
 
         $mform =& $this->_form;
 
-	// TODO: add link to add badges (/badges/newbadge.php?type=1)
+	// save courseid and blockid params
+        $mform->addElement('hidden','courseid', $courseid);
+        $mform->setType('courseid', PARAM_INT);
+        $mform->addElement('hidden','blockid', $blockid);
+        $mform->setType('blockid', PARAM_INT);
 
         // show current level associations with badges.
-	$mform->addElement('header','currentlevels', 'Current levels');
+	$mform->addElement('header','currentlevels', 'Current badges');
         foreach($badgelevels as $level => $badge) {
 		// add badge to first in array
-		$currentbadges = array_merge($badge,$freebadges);
+		$currentbadges = $badge + $freebadges;
 		$group = array();
 		$group[0] = $mform->createElement('select',
 			                          'badge' . $level,
@@ -40,20 +44,22 @@ class badgelevel_form extends moodleform {
 
 	}
 
-	// add new level association
-	$mform->addElement('header','newlevelheader', 'New level');
-	$mform->addElement('hidden','courseid', $courseid);
-	$mform->setType('courseid', PARAM_INT);
-	$mform->addElement('hidden','blockid', $blockid);
-	$mform->setType('blockid', PARAM_INT);
+        
+	// add new level association only if available badges and levels
+	if ($freebadges && $freelevels) {
+	    $mform->addElement('header','newlevelheader', 'Link badge to level');
+	    $group = array();
+            $group[0] = $mform->createElement('select','newlevel','Level', $freelevels, null);
+	    $group[1] = $mform->createElement('select','newbadge','Badge', $freebadges, null);
+	    $group[2] = $mform->createElement('submit','newbutton', 'Add', ['formaction' => '/blocks/showgrade/badgelevel.php?action=add']);
+	    $group[3] = $mform->createElement('submit','cancelbutton', 'Cancel', ['formaction' => '/blocks/showgrade/badgelevel.php?action=cancel']);
+	    $mform->addElement('group', 'newlevelgroup', null, $group, false);
+	    $mform->setType('level', PARAM_INT);
+	}
 
-	$group = array();
-        $group[0] = $mform->createElement('select','newlevel','Level', $freelevels, null);
-	$group[1] = $mform->createElement('select','newbadge','Badge', $freebadges, null);
-	$group[2] = $mform->createElement('submit','newbutton', 'Add', ['formaction' => '/blocks/showgrade/badgelevel.php?action=add']);
-	$group[3] = $mform->createElement('submit','cancelbutton', 'Cancel', ['formaction' => '/blocks/showgrade/badgelevel.php?action=cancel']);
-	$mform->addElement('group', 'newlevelgroup', null, $group, false);
-	$mform->setType('level', PARAM_INT);
+	// TODO: Add link to add badges
+	$mform->addElement('header','badgeheader', 'Badges');
+	$mform->addElement('static','badgelink', '', '<a href="/badges/index.php?type=1">Add badge</a>');
     }
 
     public function update() {
