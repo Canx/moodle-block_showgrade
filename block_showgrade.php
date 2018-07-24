@@ -186,9 +186,12 @@ class block_showgrade extends block_base {
 
     public function content_footer_admin() {
 	global $COURSE;
-
-        $url = new moodle_url('/blocks/showgrade/badgelevel.php', array('blockid' => $this->instance->id, 'courseid' => $COURSE->id));
-        return html_writer::link($url, get_string('config_badges', 'block_showgrade'));
+	if (property_exists($this->config, 'enablelevels')) {
+            if ($this->config->enablelevels == true) {
+                $url = new moodle_url('/blocks/showgrade/badgelevel.php', array('blockid' => $this->instance->id, 'courseid' => $COURSE->id));
+                return html_writer::link($url, get_string('config_badges', 'block_showgrade'));
+            }
+	}
     }
 
     public function content_student() {
@@ -197,7 +200,8 @@ class block_showgrade extends block_base {
 
         if (property_exists($this->config, 'enablelevels')) {
             if ($this->config->enablelevels == true) {
-        	$html .= '<img src="/blocks/showgrade/img/' . $this->get_level() . '.png" height="100" width="100" />';
+		// TODO: first add images in img directory and check if exists for the level
+        	//$html .= '<img src="/blocks/showgrade/img/' . $this->get_level() . '.png" height="100" width="100" />';
                 $html .= '<h2>' . $this->get_formatted_level() . '</h2>';
                 $html .= '<p>' . $this->get_formatted_nextlevel() .'</p>';
             }

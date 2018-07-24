@@ -14,7 +14,9 @@ class badgelevel_form extends moodleform {
 	$courseid = $this->db->courseid;
 	$blockid = $this->db->blockid;
 	$freebadges = $this->db->get_freebadges();
-	$freelevels = $this->db->get_freelevels(10);
+
+	// TODO: get max levels from get_maxlevels(), and refactor block_showgrade.php!
+	$freelevels = $this->db->get_freelevels(20);
 	$badgelevels = $this->db->get_badgelevels();
 	$this->action = empty($_GET['action']) ? "show" : $_GET['action'];
 	$this->level = empty($_GET['level']) ? null : $_GET['level'];
