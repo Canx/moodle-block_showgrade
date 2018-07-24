@@ -11,7 +11,6 @@ class badge_helper {
     public static function check_and_issue_badge($user, $level, $course) {
 	global $DB;
 
-	// obtener todas las badges disponibles en el curso que se pueden otorgar para el nivel
 	$sql = "SELECT id FROM (SELECT b.id FROM {badge} b INNER JOIN {" . self::$table . "} AS lb ON b.id = lb.badge_id WHERE lb.level <= ? AND b.courseid = ?) AS b WHERE id NOT IN (SELECT badgeid FROM {badge_issued} WHERE userid = ?)";
 
 	$rs = $DB->get_records_sql($sql, array($level, $course, $user));
