@@ -11,6 +11,7 @@ Features
 - Shows the points needed to level up (optional).
 - Override the block title (optional).
 - Configure the number of points to level up (optional).
+- Award badges at certain levels (optional).
 
 License
 -------
