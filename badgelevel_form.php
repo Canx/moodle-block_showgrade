@@ -59,7 +59,7 @@ class badgelevel_form extends moodleform {
 
 	// TODO: Add link to add badges
 	$mform->addElement('header','badgeheader', 'Badges');
-	$mform->addElement('static','badgelink', '', '<a href="/badges/index.php?type=1">Add badge</a>');
+	$mform->addElement('static','badgelink', '', '<a href="/badges/index.php?type=2&id=' . $courseid . '">Add badge</a>');
     }
 
     public function update() {

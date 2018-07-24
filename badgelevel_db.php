@@ -13,8 +13,8 @@ class badgelevel_db {
         global $DB;
 
 	$sql = "SELECT * FROM {badge} WHERE id NOT IN" .
-	       " (SELECT badge_id FROM {" . self::$table . "} WHERE block_id = ?)";
-        $rs = $DB->get_records_sql($sql, array($this->blockid)); 
+	       " (SELECT badge_id FROM {" . self::$table . "} WHERE block_id = ?) AND courseid = ?";
+        $rs = $DB->get_records_sql($sql, array($this->blockid, $this->courseid)); 
 
 	$badges = array();
 	foreach($rs as $record) {
@@ -40,8 +40,8 @@ class badgelevel_db {
 
        $sql = "SELECT * FROM ({" . self::$table . "}" .
 	       " AS lb INNER JOIN {badge} AS badge ON lb.badge_id = badge.id)" .
-	       " WHERE lb.block_id = ? ORDER BY level";
-       $rs = $DB->get_records_sql($sql, array($this->blockid));
+	       " WHERE lb.block_id = ? AND badge.courseid = ? ORDER BY level";
+       $rs = $DB->get_records_sql($sql, array($this->blockid, $this->courseid));
     
        $badgelevels = array();
        foreach ($rs as $record) {

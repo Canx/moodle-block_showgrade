@@ -104,11 +104,6 @@ class block_showgrade extends block_base {
     }
 
     function get_points_nextlevel() {
-        debugging("get_points_nextlevel():\n" .
-	    "  config->pointslevel: {$this->config->pointslevel}\n" .
-	    "  get_level(): {$this->get_level()}\n" .
-            "  get_finalgrade(): {$this->get_finalgrade()}");
-
         return number_format($this->config->pointslevel * ($this->get_level() + 1) - $this->get_finalgrade(), 0);
     }
 
@@ -197,7 +192,7 @@ class block_showgrade extends block_base {
     }
 
     public function content_student() {
-	global $USER;
+	global $USER, $COURSE;
 	$html = '';
 
         if (property_exists($this->config, 'enablelevels')) {
@@ -208,7 +203,7 @@ class block_showgrade extends block_base {
             }
 
             require_once('badge_helper.php');
-	    badge_helper::check_and_issue_badge($USER->id, $this->get_level());
+	    badge_helper::check_and_issue_badge($USER->id, $this->get_level(), $COURSE->id);
         }
 
         $html .= '<h4>' . $this->get_formatted_grade() . '</h4>';
@@ -253,18 +248,4 @@ class block_showgrade extends block_base {
         return true;
     }
 
-    private static function check_and_issue_badge($level, $user) {
-        global $DB;
-
-	// TODO: quizás es mejor añadir esto al cron para que lo haga con todos los usuarios???
-	//
-        // 1. comprobar la lista de insignias que tiene el usuario
-	//
-	// 2. comprobar la lista de insignias que se pueden asignar para el igual o menor al nivel
-	//
-	// 3. comprobar si la resta del primero con el segundo da alguna insignia.
-	//
-	// 4.otorgar insignias
-	
-    }
 }
