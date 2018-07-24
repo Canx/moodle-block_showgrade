@@ -197,6 +197,7 @@ class block_showgrade extends block_base {
     }
 
     public function content_student() {
+	global $USER;
 	$html = '';
 
         if (property_exists($this->config, 'enablelevels')) {
@@ -206,8 +207,8 @@ class block_showgrade extends block_base {
                 $html .= '<p>' . $this->get_formatted_nextlevel() .'</p>';
             }
 
-	    // TODO: check if we should issue badge!
-	    self::check_and_issue_badge($this->get_level(), $USER->id);
+            require_once('badge_helper.php');
+	    badge_helper::check_and_issue_badge($USER->id, $this->get_level());
         }
 
         $html .= '<h4>' . $this->get_formatted_grade() . '</h4>';
@@ -264,5 +265,6 @@ class block_showgrade extends block_base {
 	// 3. comprobar si la resta del primero con el segundo da alguna insignia.
 	//
 	// 4.otorgar insignias
+	
     }
 }
