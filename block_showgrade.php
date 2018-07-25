@@ -68,7 +68,8 @@ class block_showgrade extends block_base {
             return $this->content;
         }
 
-        if (empty($this->instance)) {
+	// not sure why I'm doing this...
+        if (empty($this->page)) {
             $this->content = '';
             return $this->content;
         }
