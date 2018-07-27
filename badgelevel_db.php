@@ -52,21 +52,23 @@ class badgelevel_db {
     }
     
     // Update level-badge association
+    // TODO: only update level-badge from block called!
     function update($level, $badge) {
        global $DB;
 
        $sql = "UPDATE {" . self::$table . "}" .
 	      " SET badge_id = ?" .
-	      " WHERE level = ?";
+	      " WHERE level = ? AND block_id = ?";
 
-       $DB->execute($sql, array($badge, $level));	
+       $DB->execute($sql, array($badge, $level, $this->blockid));	
     }
     
     // Delete level-badge association
+    // TODO: only delete level from block called!
     function delete($level) {
        global $DB;
 
-       $DB->delete_records(self::$table, array('level' => $level));
+       $DB->delete_records(self::$table, array('level' => $level, 'block_id' => $this->blockid));
     }
     
     // Add level-badge association
@@ -78,9 +80,8 @@ class badgelevel_db {
        $record->badge_id = $badge;
        $record->block_id = $this->blockid;
        
-       // deleting previous records if exist!
-       $DB->delete_records(self::$table, array('level' => $level));
+       $this->delete($level);
        $DB->insert_record(self::$table, $record);
-    }
-
+   }
+    
 }

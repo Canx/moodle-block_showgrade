@@ -134,7 +134,7 @@ class block_showgrade extends block_base {
             }
 
             require_once('badge_helper.php');
-	    badge_helper::check_and_issue_badge($USER->id, $this->helper->get_level(), $COURSE->id);
+	    badge_helper::check_and_issue_badge($USER->id, $this->helper->get_level(), $COURSE->id, $this->instance->id);
         }
 
         $html .= '<h4>' . $this->helper->get_formatted_grade() . '</h4>';
