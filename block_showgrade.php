@@ -125,31 +125,17 @@ class block_showgrade extends block_base {
 	global $USER, $COURSE;
 	$html = '';
 
-        if (property_exists($this->helper->config, 'enablelevels')) {
-            if ($this->helper->config->enablelevels == true) {
-		// TODO: first add images in img directory and check if exists for the level
-        	//$html .= '<img src="/blocks/showgrade/img/' . $this->get_level() . '.png" height="100" width="100" />';
-                $html .= '<h2>' . $this->helper->get_formatted_level() . '</h2>';
-                $html .= '<p>' . $this->helper->get_formatted_nextlevel() .'</p>';
-            }
+	$this->issue_badge($USER->id, $this->helper->get_level(), $COURSE->id, $this->instance->id);
 
-            require_once('badge_helper.php');
-	    badge_helper::check_and_issue_badge($USER->id, $this->helper->get_level(), $COURSE->id, $this->instance->id);
-        }
+        $html .= $this->get_html_level('h4');
+	$html .= $this->get_html_pointsnextlevel('p');
+	$html .= $this->get_html_points('p');
+	$html .= $this->get_html_maxpoints('p');
+	$html .= $this->get_html_completed('p');
 
-        $html .= '<h4>' . $this->helper->get_formatted_grade() . '</h4>';
-
-        if (property_exists($this->helper->config, 'enablemaxpoints')) {
-            if ($this->helper->config->enablemaxpoints == true) {
-                $html.= '<p>' . $this->helper->get_formatted_maxpoints() . '</p>';
-            }
-        }
-
-        if (property_exists($this->helper->config, 'enablecompletion')) {
-            if ($this->helper->config->enablecompletion == true) {
-                $html .= '<p>' . $this->helper->get_completed_percent() . '</p>';
-            }
-        }
+        // TODO: first add images in img directory and check if exists for the level
+        //$html .= '<img src="/blocks/showgrade/img/' . $this->get_level() . '.png" height="100" width="100" />';
+	 
 
 	return $html;
 
@@ -177,6 +163,72 @@ class block_showgrade extends block_base {
         mtrace( "Hey, my cron script is running" );
         // do something
         return true;
+    }
+
+    private function get_html_level($tag) {
+	$html = '';
+
+        if (property_exists($this->helper->config, 'enablelevels')) {
+            if ($this->helper->config->enablelevels == true) {
+		$content = get_string('level', 'block_showgrade') . ' ' . $this->helper->get_level();
+		$content.= ' / ' . $this->helper->get_maxlevel();
+	        $html = html_writer::tag($tag, $content);
+            }
+
+        }
+
+        return $html;
+    }
+
+    private function get_html_pointsnextlevel($tag) {
+	$html = '';
+
+        if ($this->helper->config->enablelevels == true) {
+	    $html = html_writer::tag($tag, $this->helper->get_formatted_nextlevel());
+        }
+
+	return $html;
+    }
+
+    private function get_html_points($tag) {
+        $html = '';
+
+        $content = "Points: " . $this->helper->get_points();
+
+        if (property_exists($this->helper->config, 'enablemaxpoints')) {
+            if ($this->helper->config->enablemaxpoints == true) {
+                $content .= '/' . $this->helper->get_maxpoints();
+            }
+        }
+        $html = html_writer::tag($tag, $content); 
+
+	return $html;
+    }
+
+    private function get_html_maxpoints($tag) {
+	$html = '';
+
+        
+	return $html;
+    }
+
+    private function get_html_completed($tag) {
+	$html = '';
+
+        if (property_exists($this->helper->config, 'enablecompletion')) {
+            if ($this->helper->config->enablecompletion == true) {
+                $html = html_writer::tag($tag, $this->helper->get_completed_percent());
+            }
+        }
+
+	return $html;
+    }
+
+    private function issue_badge($user, $level, $courseid, $blockid) {
+        if ($this->helper->config->enablelevels == true) {
+            require_once('badge_helper.php');
+	    badge_helper::check_and_issue_badge($user, $level, $courseid, $blockid);
+        }
     }
 
 }

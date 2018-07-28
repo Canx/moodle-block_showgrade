@@ -45,15 +45,15 @@ class showgrade_helper {
         return number_format(floor($this->get_finalgrade() / $this->config->pointslevel), 0);
     }
 
-    function get_formatted_level() {
-        return get_string('level', 'block_showgrade') . ' ' . $this->get_level();
+    function get_maxlevel() {
+	return number_format(floor($this->get_maxpoints() / $this->config->pointslevel), 0);
     }
 
-    function get_formatted_grade() {
+    function get_points() {
         if ($this->get_grade() == null) {
             return "-";
         }
-        return number_format($this->get_finalgrade(), 0) . ' points';
+        return number_format($this->get_finalgrade(), 0);
     }
 
     function get_points_nextlevel() {
@@ -61,6 +61,10 @@ class showgrade_helper {
     }
 
     function get_formatted_nextlevel() {
+        if ($this->get_level() == $this->get_maxlevel()) {
+            return "Maximum level reached!";
+        }
+
         return $this->get_points_nextlevel() . ' ' . get_string('pointslevelup', 'block_showgrade');
     }
 
@@ -73,13 +77,7 @@ class showgrade_helper {
     }
 
     function get_maxpoints() {
-	return $this->category->get_grade_item()->grademax;
-    }
-
-    function get_formatted_maxpoints() {
-        return get_string('of','block_showgrade')
-                . ' ' . number_format($this->get_maxpoints(),0)
-                . ' ' . get_string('possiblepoints', 'block_showgrade');
+	return number_format($this->category->get_grade_item()->grademax,0);
     }
 
     function get_max_level() {
