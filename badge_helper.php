@@ -24,6 +24,8 @@ class badge_helper {
             $badge = new badge($record->id);
 	    $badge->issue($user);
 	}
+
+	$rs->close();
     }
 
 }
