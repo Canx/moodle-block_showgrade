@@ -21,7 +21,7 @@ $PAGE->set_url($url);
 // $PAGE->set_heading
 
 // Que diferencia hay con otros layouts???
-$PAGE->set_pagelayout('standard'); 
+$PAGE->set_pagelayout('incourse'); 
 // $PAGE->navbar->add
 
 $db = new badgelevel_db($courseid, $blockid);
