@@ -15,12 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once('../../config.php');
-require_once('./badgelevel_form.php');
+require_once('badgelevel_form.php');
+require_once('block_form.php');
 
 require_login();
 
+// TODO: restrict access to course teachers!
+
 $courseid = required_param('courseid', PARAM_INT);
-$blockid = required_param('blockid', PARAM_INT);
+$blockid = optional_param('blockid', null, PARAM_INT);
 $return = optional_param('returnurl', 0, PARAM_LOCALURL);
 
 $url = new moodle_url('/blocks/showgrade/badgelevel.php', array('courseid' => $courseid, 'blockid' => $blockid));
@@ -31,28 +34,34 @@ $PAGE->set_url($url);
 
 $PAGE->set_pagelayout('incourse');
 
-$db = new badgelevel_db($courseid, $blockid);
-
-$form = new badgelevel_form($db);
-
-switch ($form->action) {
-    case 'update':
-        $form->update();
-        redirect($url);
-        break;
-    case 'delete':
-        $form->delete();
-        redirect($url);
-        break;
-    case 'add':
-        $form->add();
-        redirect($url);
-        break;
-    case 'cancel':
-        redirect($courseurl);
-        break;
-    default:
-        echo $OUTPUT->header();
-        $form->display();
-        echo $OUTPUT->footer();
+if ($blockid) {
+    $db = new badgelevel_db($courseid, $blockid);
+    
+    $form = new badgelevel_form($db);
+    
+    switch ($form->action) {
+        case 'update':
+            $form->update();
+            redirect($url);
+            break;
+        case 'delete':
+            $form->delete();
+            redirect($url);
+            break;
+        case 'add':
+            $form->add();
+            redirect($url);
+            break;
+        case 'cancel':
+            redirect($courseurl);
+            break;
+    }
+} else {
+    // No blockid passed, we have to choose it first!
+    $form = new block_form($courseid);   
 }
+
+echo $OUTPUT->header();
+$form->display();
+echo $OUTPUT->footer();
+
