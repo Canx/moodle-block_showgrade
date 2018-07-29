@@ -29,24 +29,19 @@ require_once('showgrade_helper.php');
 
 class block_showgrade extends block_base {
 
-    function init() {
+    public function init() {
         $this->title = '';
-
-	// TODO: remove when refactoring done
-        $this->grade = null;
-        $this->category = null;
-
     }
 
     public function specialization() {
-	$this->helper = new showgrade_helper($this->config);
+        $this->helper = new showgrade_helper($this->config);
 
-	// TODO: externalize to helper method
+        // TODO: externalize to helper method.
         if (isset($this->config)) {
-            // TODO apply null pattern
+            // TODO apply null pattern.
             if (isset($this->config->category)) {
                 if (empty($this->config->title)) {
-		    // TODO: change call to make it shorter!!
+                    // TODO: change call to make it shorter.
                     $this->title = $this->helper->get_category()->fullname;
                     if ($this->title == "?") {
                         $this->title = get_string('coursetotal', 'block_showgrade');
@@ -55,20 +50,19 @@ class block_showgrade extends block_base {
                     $this->title = $this->config->title;
                 }
             }
-        }
-        else {
+        } else {
             $this->title = get_string('defaulttitle', 'block_showgrade');
         }
     }
 
-    function get_content() {
+    public function get_content() {
         global $CFG, $OUTPUT, $COURSE, $USER;
 
         if ($this->content !== null) {
             return $this->content;
         }
 
-	// not sure why I'm doing this...
+        // Not sure why I'm doing this...
         if (empty($this->page)) {
             $this->content = '';
             return $this->content;
@@ -81,17 +75,18 @@ class block_showgrade extends block_base {
         if ($this->config == null) {
             return $this->content;
         }
-	// only show level if current user is enrolled as student!
-	$context = context_course::instance($COURSE->id);
-	$isStudent = current(get_user_roles($context, $USER->id))->shortname=='student'? true : false;
 
-	if ($isStudent) {
-	    $this->content->text = $this->content_student();
-        }
-	else {
+        // Only show level if current user is enrolled as student!
+        $context = context_course::instance($COURSE->id);
+        $isstudent = current(get_user_roles($context, $USER->id))->shortname == 'student' ? true : false;
+
+        if ($isstudent) {
+            $this->content->text = $this->content_student();
+
+        } else {
             $this->content->text = $this->content_admin();
-	    $this->content->footer = $this->content_footer_admin();
-	}
+            $this->content->footer = $this->content_footer_admin();
+        }
 
         return $this->content;
     }
@@ -103,44 +98,37 @@ class block_showgrade extends block_base {
 
         if (property_exists($this->config, 'enablelevels')) {
             if ($this->config->enablelevels == true) {
-        	$html .= "<p>Points per level:{$this->helper->config->pointslevel}</p>";
+                $html .= "<p>Points per level:{$this->helper->config->pointslevel}</p>";
                 $html .= "<p>Maximum level:{$this->helper->get_max_level()}</p>";
 
             }
         }
-	return $html;
+        return $html;
     }
 
     public function content_footer_admin() {
-	global $COURSE;
-	if (property_exists($this->helper->config, 'enablelevels')) {
+        global $COURSE;
+        if (property_exists($this->helper->config, 'enablelevels')) {
             if ($this->helper->config->enablelevels == true) {
-                $url = new moodle_url('/blocks/showgrade/badgelevel.php', array('blockid' => $this->instance->id, 'courseid' => $COURSE->id));
+                $url = new moodle_url('/blocks/showgrade/badgelevel.php',
+                   array('blockid' => $this->instance->id, 'courseid' => $COURSE->id));
                 return html_writer::link($url, get_string('config_badges', 'block_showgrade'));
             }
-	}
+        }
     }
 
     public function content_student() {
-	global $USER, $COURSE;
-	$html = '';
+        global $USER, $COURSE;
+        $html = '';
 
-	$this->issue_badge($USER->id, $this->helper->get_level(), $COURSE->id, $this->instance->id);
+        $this->issue_badge($USER->id, $this->helper->get_level(), $COURSE->id, $this->instance->id);
 
         $html .= $this->get_html_level('h4');
-	$html .= $this->get_html_pointsnextlevel('p');
-	$html .= $this->get_html_points('p');
-	$html .= $this->get_html_maxpoints('p');
-	$html .= $this->get_html_completed('p');
+        $html .= $this->get_html_pointsnextlevel('p');
+        $html .= $this->get_html_points('p');
+        $html .= $this->get_html_completed('p');
 
-        // TODO: first add images in img directory and check if exists for the level
-        //$html .= '<img src="/blocks/showgrade/img/' . $this->get_level() . '.png" height="100" width="100" />';
-	 
-
-	return $html;
-
-
-
+        return $html;
     }
 
     public function applicable_formats() {
@@ -157,37 +145,37 @@ class block_showgrade extends block_base {
         return true;
     }
 
-    function has_config() {return true;}
+    public function has_config() {
+        return true;
+    }
 
     public function cron() {
         mtrace( "Hey, my cron script is running" );
-        // do something
         return true;
     }
 
     private function get_html_level($tag) {
-	$html = '';
+        $html = '';
 
         if (property_exists($this->helper->config, 'enablelevels')) {
             if ($this->helper->config->enablelevels == true) {
-		$content = get_string('level', 'block_showgrade') . ' ' . $this->helper->get_level();
-		$content.= ' / ' . $this->helper->get_maxlevel();
-	        $html = html_writer::tag($tag, $content);
+                $content = get_string('level', 'block_showgrade') . ' ' . $this->helper->get_level();
+                $content .= ' / ' . $this->helper->get_maxlevel();
+                $html = html_writer::tag($tag, $content);
             }
-
         }
 
         return $html;
     }
 
     private function get_html_pointsnextlevel($tag) {
-	$html = '';
+        $html = '';
 
         if ($this->helper->config->enablelevels == true) {
-	    $html = html_writer::tag($tag, $this->helper->get_formatted_nextlevel());
+            $html = html_writer::tag($tag, $this->helper->get_formatted_nextlevel());
         }
 
-	return $html;
+        return $html;
     }
 
     private function get_html_points($tag) {
@@ -200,20 +188,13 @@ class block_showgrade extends block_base {
                 $content .= '/' . $this->helper->get_maxpoints();
             }
         }
-        $html = html_writer::tag($tag, $content); 
+        $html = html_writer::tag($tag, $content);
 
-	return $html;
-    }
-
-    private function get_html_maxpoints($tag) {
-	$html = '';
-
-        
-	return $html;
+        return $html;
     }
 
     private function get_html_completed($tag) {
-	$html = '';
+        $html = '';
 
         if (property_exists($this->helper->config, 'enablecompletion')) {
             if ($this->helper->config->enablecompletion == true) {
@@ -221,13 +202,13 @@ class block_showgrade extends block_base {
             }
         }
 
-	return $html;
+        return $html;
     }
 
     private function issue_badge($user, $level, $courseid, $blockid) {
         if ($this->helper->config->enablelevels == true) {
             require_once('badge_helper.php');
-	    badge_helper::check_and_issue_badge($user, $level, $courseid, $blockid);
+            badge_helper::check_and_issue_badge($user, $level, $courseid, $blockid);
         }
     }
 
