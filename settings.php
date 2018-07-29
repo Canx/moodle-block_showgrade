@@ -24,11 +24,13 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-//$settings->add(new admin_setting_heading('sampleheader',
-//                                         get_string('headerconfig', 'block_showgrade'),
-//                                         get_string('descconfig', 'block_showgrade')));
+/**
+$settings->add(new admin_setting_heading('sampleheader',
+                                         get_string('headerconfig', 'block_showgrade'),
+                                         get_string('descconfig', 'block_showgrade')));
 
-//$settings->add(new admin_setting_configcheckbox('showgrade/foo',
-//                                                get_string('labelfoo', 'block_showgrade'),
-//                                                get_string('descfoo', 'block_showgrade'),
-//                                                '0'));
+$settings->add(new admin_setting_configcheckbox('showgrade/foo',
+                                                get_string('labelfoo', 'block_showgrade'),
+                                                get_string('descfoo', 'block_showgrade'),
+                                                '0'));
+ */

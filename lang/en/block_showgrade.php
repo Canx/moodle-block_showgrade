@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,7 +18,7 @@
  * Strings for component 'block_showgrade', language 'en'
  *
  * @package   block_showgrade
- * @copyright Daniel Neis <danielneis@gmail.com>
+ * @copyright Ruben Canchos <canchete@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
