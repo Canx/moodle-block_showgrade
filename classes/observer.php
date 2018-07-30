@@ -14,19 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
+class block_showgrade_observer {
 
-global $CFG;
-
-require_once($CFG->libdir . '/badgeslib.php');
-require_once('classes/event/user_leveledup.php');
-
-class badge_helper {
-
-    // TODO: redundant in badgelevel_db.
+    // TODO: Move to common const space.
     private static $table = "block_showgrade_level_badge";
 
-    public static function check_and_issue_badge($user, $level, $course, $block) {
+    public static function xp_user_leveledup(\block_xp\event\user_leveledup $event) {
+        // TODO!
+        var_dump("XP:" . $event);
+    }
+
+    public static function showgrade_user_leveledup(\block_showgrade\event\user_leveledup $event) {
+        self::check_and_issue_badge($event->userid, $event->other['level'], $event->courseid, $event->other['blockid']);
+    }
+
+    private static function check_and_issue_badge($user, $level, $course, $block) {
         global $DB;
 
         $sql = "SELECT id FROM
@@ -43,19 +45,4 @@ class badge_helper {
             $badge->issue($user);
         }
     }
-
-    public static function trigger_levelup_event_if_needed($user, $level, $courseid, $blockid) {
-        $params = array(
-            'context' => context_block::instance($blockid),
-            'userid' => $user,
-            'courseid' => $courseid,
-            'other' => array('level' => $level,
-                             'blockid' => $blockid)
-        );
-
-        // TODO: only call this if level increment!
-        $lupevent = \block_showgrade\event\user_leveledup::create($params);
-        $lupevent->trigger();
-    }
-
 }

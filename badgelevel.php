@@ -24,12 +24,11 @@ require_login();
 
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = optional_param('blockid', null, PARAM_INT);
-$return = optional_param('returnurl', 0, PARAM_LOCALURL);
 
 $url = new moodle_url('/blocks/showgrade/badgelevel.php', array('courseid' => $courseid, 'blockid' => $blockid));
 $courseurl = new moodle_url('/course/view.php', array('id' => $courseid));
 
-$PAGE->set_context(context_user::instance($USER->id));
+$PAGE->set_context(context_course::instance($courseid));
 $PAGE->set_url($url);
 
 $PAGE->set_pagelayout('incourse');

@@ -208,7 +208,7 @@ class block_showgrade extends block_base {
     private function issue_badge($user, $level, $courseid, $blockid) {
         if ($this->helper->config->enablelevels == true) {
             require_once('badge_helper.php');
-            badge_helper::check_and_issue_badge($user, $level, $courseid, $blockid);
+            badge_helper::trigger_levelup_event_if_needed($user, $level, $courseid, $blockid);
         }
     }
 

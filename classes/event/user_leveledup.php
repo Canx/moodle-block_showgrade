@@ -14,17 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Version details
- *
- * @package    block_showgrade
- * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace block_showgrade\event;
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2018073101;
-$plugin->requires  = 2012112900;
-$plugin->component = 'block_showgrade';
-$plugin->cron = 300;
+class user_leveledup extends \core\event\base {
+
+    protected function init() {
+        $this->data['crud'] = 'r';
+        $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
+    }
+
+    public function get_blockid() {
+        return $this->blockid;
+    }
+
+    public function get_userid() {
+        return $this->userid;
+    }
+
+    public function get_courseid() {
+        return $this->courseid;
+    } 
+}

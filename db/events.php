@@ -14,17 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Version details
- *
- * @package    block_showgrade
- * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+// List of observers.
+$observers = array(
+    array(
+        'eventname'   => '\block_xp\event\user_leveledup',
+        'callback'    => 'block_showgrade_observer::xp_user_leveledup',
+    ),
+    array(
+        'eventname'   => '\block_showgrade\event\user_leveledup',
+        'callback'    => 'block_showgrade_observer::showgrade_user_leveledup')
+);
 
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->version   = 2018073101;
-$plugin->requires  = 2012112900;
-$plugin->component = 'block_showgrade';
-$plugin->cron = 300;
