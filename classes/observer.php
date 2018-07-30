@@ -14,14 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+require_once($CFG->libdir . '/badgeslib.php');
+
 class block_showgrade_observer {
 
     // TODO: Move to common const space.
     private static $table = "block_showgrade_level_badge";
 
     public static function xp_user_leveledup(\block_xp\event\user_leveledup $event) {
-        // TODO!
-        var_dump("XP:" . $event);
+        $blockid = self::get_blockid("xp", $event->contextid);
+        self::check_and_issue_badge($event->userid, $event->other['level'], $event->courseid, $blockid);
     }
 
     public static function showgrade_user_leveledup(\block_showgrade\event\user_leveledup $event) {
@@ -45,4 +47,27 @@ class block_showgrade_observer {
             $badge->issue($user);
         }
     }
+
+    private static function get_blockid($name, int $contextid) {
+        global $DB;
+
+        $sql = "SELECT *
+                FROM {block_instances} bi
+                WHERE bi.blockname = :name
+                AND bi.parentcontextid = :contextid";
+
+        $params = [
+            'name' => preg_replace('/^block_/i', '', $name),
+            'contextid' => $contextid
+        ];
+
+        $records = $DB->get_records_sql($sql, $params);
+        if (!$records || count($records) > 1) {
+            return null;
+        }
+
+        $record = reset($records);
+        return $record->id;
+    }
+
 }
