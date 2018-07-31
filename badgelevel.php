@@ -28,10 +28,18 @@ $blockid = optional_param('blockid', null, PARAM_INT);
 $url = new moodle_url('/blocks/showgrade/badgelevel.php', array('courseid' => $courseid, 'blockid' => $blockid));
 $courseurl = new moodle_url('/course/view.php', array('id' => $courseid));
 
-$PAGE->set_context(context_course::instance($courseid));
+// TODO: check permissions and that course exists!
+$course = $DB->get_record('course', array('id' => $courseid));
+$coursecontext = context_course::instance($courseid);
+$PAGE->set_context($coursecontext);
+$PAGE->set_pagelayout('incourse');
 $PAGE->set_url($url);
 
-$PAGE->set_pagelayout('incourse');
+
+$hdr = 'Link badges to levels';
+$PAGE->set_heading(format_string($course->fullname, true, array('context' => $coursecontext)) . ': ' . $hdr);
+$PAGE->set_title($hdr);
+
 
 if ($blockid) {
     $db = new badgelevel_db($courseid, $blockid);
