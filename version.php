@@ -18,7 +18,7 @@
  * Version details
  *
  * @package    block_showgrade
- * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
+ * @copyright  2018 Ruben Cancho Gasulla (@canx)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

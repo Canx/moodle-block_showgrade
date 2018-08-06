@@ -17,6 +17,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/gradelib.php');
+//require_once('classes/event/user_leveledup.php');
 
 class showgrade_helper {
 
@@ -99,4 +100,16 @@ class showgrade_helper {
         return number_format(floor($this->get_maxpoints() / $this->config->pointslevel), 0);
     }
 
+    public static function trigger_levelup_event_if_needed($user, $level, $courseid, $blockid) {
+        $params = array(
+            'context' => context_block::instance($blockid),
+            'userid' => $user,
+            'courseid' => $courseid,
+            'other' => array('level' => $level,
+                             'blockid' => $blockid));
+
+        // TODO: only call this if level increment!
+        $lupevent = \block_showgrade\event\user_leveledup::create($params);
+        $lupevent->trigger();
+    }
 }

@@ -1,5 +1,5 @@
 {
-    "name": "danielneis/moodle-block_showgrade",
+    "name": "canx/moodle-block_showgrade",
     "description": "Moodle block that shows total grade for a category",
     "license": "GPLv3",
     "authors": [
