@@ -22,13 +22,12 @@ require_once($CFG->libdir . '/gradelib.php');
 
 class block_showgrade_edit_form extends block_edit_form {
 
-    protected function specific_definition($mform) {
+    // Only get categories which has GRADE_AGGREGATE_SUM as aggregation method.
+    private static function get_all_categories() {
         global $DB, $COURSE;
 
-        // Only get categories which has GRADE_AGGREGATE_SUM as aggregation method.
+        $categories = []; 
         $categoriesrs = grade_category::fetch_all(array('courseid' => $COURSE->id, 'aggregation' => GRADE_AGGREGATE_SUM));
-
-        $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
 
         if ($categoriesrs != null) {
             foreach ($categoriesrs as $record) {
@@ -38,6 +37,17 @@ class block_showgrade_edit_form extends block_edit_form {
                     $categories[$record->id] = $record->fullname;
                 }
             }
+         }
+
+         return $categories;
+    }
+
+    protected function specific_definition($mform) {
+
+        $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
+
+        $categories = self::get_all_categories();
+        if ($categories) {
 
             // Section header title according to language file.
             $mform->addElement('text', 'config_title', get_string('blocktitle', 'block_showgrade'));
