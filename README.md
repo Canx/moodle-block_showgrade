@@ -3,7 +3,7 @@ Moodle block that shows total points and level for a grade category with natural
 
 Introduction
 ------------
-The Moodle grading system can be a great gamification platform. This plugin exploits the natural type aggregation of grade categories, where activities have their points added up, so it can work as a point system.
+The Moodle grading system can be a great gamification platform. This plugin exploits the [natural type aggregation](https://docs.moodle.org/35/en/Grade_aggregation#Natural), where activities have their points added up, so it can work as a point system.
 
 Usage
 -----
