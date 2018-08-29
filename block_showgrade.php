@@ -91,10 +91,9 @@ class block_showgrade extends block_base {
         return $this->content;
     }
 
+    // TODO: improve admin block content
     public function content_admin() {
-        $html = '';
-        $html .= '<h1>Showgrade block</h1>';
-        $html .= "<p>Maximum points:{$this->helper->get_maxpoints()}</p>";
+        $html = "<p>Maximum points:{$this->helper->get_maxpoints()}</p>";
 
         if (property_exists($this->config, 'enablelevels')) {
             if ($this->config->enablelevels == true) {
@@ -108,13 +107,14 @@ class block_showgrade extends block_base {
 
     public function content_footer_admin() {
         global $COURSE;
-        if (property_exists($this->helper->config, 'enablelevels')) {
-            if ($this->helper->config->enablelevels == true) {
-                $url = new moodle_url('/local/badgelevel/index.php',
-                   array('blockid' => $this->instance->id, 'courseid' => $COURSE->id));
-                return html_writer::link($url, get_string('config_badges', 'block_showgrade'));
-            }
-        }
+
+        //if (property_exists($this->helper->config, 'enablelevels')) {
+        //    if ($this->helper->config->enablelevels == true) {
+        //        $url = new moodle_url('/local/badgelevel/index.php',
+        //           array('blockid' => $this->instance->id, 'courseid' => $COURSE->id));
+        //        return html_writer::link($url, get_string('config_badges', 'block_showgrade'));
+        //    }
+        //}
     }
 
     public function content_student() {
