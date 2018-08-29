@@ -12,7 +12,7 @@ Change the block title an choose one or more grade categories. If you can't see 
 
 You can choose to show the maximum points, the completion percentage and levels. Levels are linear and you need to configure the points needed to level up.
 
-After that a student will see a block with points achieved for the category (or categories) and optionally maximum ponts, percentage and level.
+After that a student will see a block with points achieved for the category (or categories) and optionally maximum points, percentage and level.
 
 If you want to award badges when achieving certaing levels you can install the companion plugin [badgelevel](https://github.com/Canx/moodle-local_badgelevel)
 
