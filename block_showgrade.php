@@ -121,8 +121,10 @@ class block_showgrade extends block_base {
         global $USER, $COURSE;
         $html = '';
 
+        // TODO: this should not be done here!
         $this->issue_badge($USER->id, $this->helper->get_level(), $COURSE->id, $this->instance->id);
 
+        // TODO: improve visuals
         $html .= $this->get_html_level('h4');
         $html .= $this->get_html_pointsnextlevel('p');
         $html .= $this->get_html_points('p');
