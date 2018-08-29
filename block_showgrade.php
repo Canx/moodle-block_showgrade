@@ -39,10 +39,10 @@ class block_showgrade extends block_base {
         // TODO: externalize to helper method.
         if (isset($this->config)) {
             // TODO apply null pattern.
-            if (isset($this->config->category)) {
+            if (isset($this->config->categories)) {
                 if (empty($this->config->title)) {
-                    // TODO: change call to make it shorter.
-                    $this->title = $this->helper->get_category()->fullname;
+                    // TODO: problem when more than 1 category selected!
+                    $this->title = current($this->helper->get_categories())->fullname;
                     if ($this->title == "?") {
                         $this->title = get_string('coursetotal', 'block_showgrade');
                     }

@@ -25,7 +25,7 @@
 $string['blockstring'] = 'Block string';
 $string['descconfig'] = 'Description of the config section';
 $string['descfoo'] = 'Config description';
-$string['category'] = 'Grade category';
+$string['categories'] = 'Grade categories';
 $string['headerconfig'] = 'Config section header';
 $string['labelfoo'] = 'Config label';
 $string['showgrade:addinstance'] = 'Add a grade block';
@@ -44,3 +44,4 @@ $string['of'] = 'of';
 $string['possiblepoints'] = 'possible points';
 $string['no_category_error'] = "ERROR: This plugin can't be configured if no grade category with natural aggregation is found!";
 $string['config_badges'] = 'Config badges';
+$string['missingtitle'] = 'Block title is required';

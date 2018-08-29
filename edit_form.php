@@ -52,7 +52,11 @@ class block_showgrade_edit_form extends block_edit_form {
             // Section header title according to language file.
             $mform->addElement('text', 'config_title', get_string('blocktitle', 'block_showgrade'));
             $mform->setType('config_title', PARAM_TEXT);
-            $mform->addElement('select', 'config_category', get_string('category', 'block_showgrade'), $categories);
+            $mform->addRule('config_title', get_string('missingtitle', 'block_showgrade'), 'required');
+
+            $mform->addElement('select', 'config_categories', get_string('categories', 'block_showgrade'), $categories);
+            $mform->getElement('config_categories')->setMultiple(true);
+
             $mform->addElement('advcheckbox', 'config_enablemaxpoints', get_string('enablemaxpoints', 'block_showgrade'));
             $mform->addElement('advcheckbox', 'config_enablecompletion', get_string('enablecompletion', 'block_showgrade'));
             $mform->addElement('advcheckbox', 'config_enablelevels', get_string('enablelevels', 'block_showgrade'));

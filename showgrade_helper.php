@@ -23,42 +23,41 @@ class showgrade_helper {
 
     public function __construct($config) {
         $this->config = $config;
-        $this->category = null;
+        $this->categories = null;
         $this->grade = null;
     }
 
-    public function get_category() {
-        if ($this->category == null && $this->config->category !== null) {
-            $this->category = grade_category::fetch(array('id' => $this->config->category));
+    public function get_categories() {
+        if ($this->categories == null && $this->config->categories !== null) {
+            foreach($this->config->categories as $category) {
+                if ($this->categories == null) {
+                    $this->categories = [];
+                }
+                $this->categories[$category] = grade_category::fetch(array('id' => $category));
+            }
         }
-        return $this->category;
+        return $this->categories;
     }
 
     public function get_grade() {
         global $DB, $USER;
-        if ($this->grade == null && $this->config->category !== null) {
-            $category = $this->get_category();
-            if ($category) {
-                $this->grade = $DB->get_record('grade_grades',
-                        array('itemid' => $category->get_grade_item()->id,
-                              'userid' => $USER->id));
-            } else {
-                $this->grade = null;
+        if ($this->grade == null && $this->config->categories !== null) {
+            $categories = $this->get_categories();
+
+            $this->grade = 0;
+            foreach($categories as $category) {
+                $grade = 0;
+                $grade = $DB->get_record('grade_grades',
+                            array('itemid' => $category->get_grade_item()->id,
+                                  'userid' => $USER->id));
+                $this->grade += $grade->finalgrade;
             }
         }
         return $this->grade;
     }
 
-    public function get_finalgrade() {
-        if ($this->get_grade() != null) {
-            return $this->get_grade()->finalgrade;
-        } else {
-            return 0;
-        }
-    }
-
     public function get_level() {
-        return number_format(floor($this->get_finalgrade() / $this->config->pointslevel), 0);
+        return number_format(floor($this->get_grade() / $this->config->pointslevel), 0);
     }
 
     public function get_maxlevel() {
@@ -69,11 +68,11 @@ class showgrade_helper {
         if ($this->get_grade() == null) {
             return "-";
         }
-        return number_format($this->get_finalgrade(), 0);
+        return number_format($this->get_grade(), 0);
     }
 
     public function get_points_nextlevel() {
-        return number_format($this->config->pointslevel * ($this->get_level() + 1) - $this->get_finalgrade(), 0);
+        return number_format($this->config->pointslevel * ($this->get_level() + 1) - $this->get_grade(), 0);
     }
 
     public function get_formatted_nextlevel() {
@@ -89,11 +88,15 @@ class showgrade_helper {
     }
 
     public function get_completed_percent() {
-        return $this->percent($this->get_finalgrade() / $this->get_maxpoints()) . ' ' . get_string('completed', 'block_showgrade');
+        return $this->percent($this->get_grade() / $this->get_maxpoints()) . ' ' . get_string('completed', 'block_showgrade');
     }
 
     public function get_maxpoints() {
-        return number_format($this->category->get_grade_item()->grademax, 0);
+        $max = 0;
+        foreach ($this->get_categories() as $category) {
+            $max += $category->get_grade_item()->grademax;
+        }
+        return number_format($max, 0);
     }
 
     public function get_max_level() {
