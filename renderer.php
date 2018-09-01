@@ -42,7 +42,6 @@ class block_showgrade_renderer extends plugin_renderer_base {
     }
     
     public function content_student() {
-        global $USER, $COURSE;
         $html = '';
 
         // TODO: improve visuals
