@@ -80,6 +80,7 @@ class block_showgrade_renderer extends plugin_renderer_base {
     private function get_html_points($tag) {
         $html = '';
 
+        // TODO: colorize points based on grade to pass (if exists)
         $content = "Points: " . $this->helper->get_points();
 
         if (property_exists($this->helper->config, 'enablemaxpoints')) {
